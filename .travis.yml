@@ -2,7 +2,18 @@ sudo: required
 services:
   - docker
 before_install:
-  - gem install bundler
-  - docker build -t clienttest -f ./client/Dockerfile.dev ./client
-scripts:
-  - docker run clienttest npm test -- --coverage
+  - docker build -t kurabi/react-test -f ./client/Dockerfile.dev ./client
+script:
+  - docker run kurabi/react-test npm test -- --coverage
+after_success:
+  - docker build -t kurabi/multi-client ./client
+  - docker build -t kurabi/multi-nginx ./nginx
+  - docker build -t kurabi/multi-api ./api
+  - docker build -t kurabi/multi-worker ./worker
+  # Login to docker cli
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Push the above images to docker hub
+  - docker push kurabi/multi-client 
+  - docker push kurabi/multi-nginx
+  - docker push kurabi/multi-api
+  - docker push kurabi/multi-worker
