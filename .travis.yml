@@ -1,0 +1,19 @@
+sudo: required
+services:
+  - docker
+before_install:
+  - docker build -t kurabi/client-test -f ./client/Dockerfile.dev ./client
+scripts:
+  - docker run kurabi/client-test npm test -- --coverage
+after_success:
+  - docker build -t kurabi/multi-client ./client
+  - docker build -t kurabi/multi-nginx ./nginx
+  - docker build -t kurabi/multi-api ./api
+  - docker build -t kurabi/multi-worker ./worker
+  # Login to docker cli
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Push the above images to docker hub
+  - docker push kurabi/multi-client 
+  - docker push kurabi/multi-nginx
+  - docker push kurabi/multi-api
+  - docker push kurabi/multi-worker
