@@ -5,25 +5,29 @@
       "name": "client", 
       "image": "kurabi/multi-client", 
       "hostname": "client",
-      "essential": false
+      "essential": false,
+      "memory": 128
     },
     { 
       "name": "api", 
       "image": "kurabi/multi-api", 
       "hostname": "api",
-      "essential": false
+      "essential": false,
+      "memory": 128
     },
     { 
       "name": "worker", 
       "image": "kurabi/multi-worker", 
-      "essential": false
+      "essential": false,
+      "memory": 128
     },
     { 
       "name": "nginx", 
       "image": "kurabi/multi-nginx", 
       "essential": true,
       "portMappings": [ { "hostPort": 80, "containerPort": 80 } ],
-      "links": ["client", "api"]
+      "links": ["client", "api"],
+      "memory": 128
     }
   ]
 }
