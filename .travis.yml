@@ -2,6 +2,7 @@ sudo: required
 services:
   - docker
 before_install:
+  - gem install bundler
   - docker build -t clienttest -f ./client/Dockerfile.dev ./client
 scripts:
   - docker run clienttest npm test -- --coverage
